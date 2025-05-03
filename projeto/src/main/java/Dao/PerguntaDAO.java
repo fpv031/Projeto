@@ -1,6 +1,6 @@
-package dao;
+package Dao;
 
-import model.Pergunta;
+import Models.Perguntas;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class PerguntaDAO {
         this.conn = conn;
     }
 
-    public void salvarPergunta(Pergunta pergunta) {
+    public void salvarPergunta(Perguntas pergunta) {
         String sql = "INSERT INTO pergunta (texto, tipo, pergunta_condicional_id, valor_condicional) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, pergunta.getTexto());
@@ -29,14 +29,14 @@ public class PerguntaDAO {
         }
     }
 
-    public List<Pergunta> listarPerguntas() {
-        List<Pergunta> perguntas = new ArrayList<>();
+    public List<Perguntas> listarPerguntas() {
+        List<Perguntas> perguntas = new ArrayList<>();
         String sql = "SELECT * FROM pergunta";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Pergunta p = new Pergunta(
+                Perguntas p = new Perguntas(
                     rs.getInt("id"),
                     rs.getString("texto"),
                     rs.getString("tipo"),

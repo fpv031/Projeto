@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" fx:controller="controller.AdminController"
-      alignment="CENTER" spacing="10" padding="20">
+      alignment="CENTER" spacing="10" >
     <Label text="Painel do Administrador" style="-fx-font-size: 20;" />
     <TextField fx:id="txtPergunta" promptText="Texto da Pergunta" />
     <ChoiceBox fx:id="cbTipo" />

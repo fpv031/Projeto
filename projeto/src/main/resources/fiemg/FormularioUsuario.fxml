@@ -5,11 +5,11 @@
             xmlns:fx="http://javafx.com/fxml" fx:controller="controller.FormularioUsuarioController">
     <center>
         <ScrollPane fitToWidth="true">
-            <VBox fx:id="vboxPerguntas" spacing="15" padding="15" />
+            <VBox fx:id="vboxPerguntas" spacing="15" />
         </ScrollPane>
     </center>
     <bottom>
-        <HBox alignment="CENTER" padding="10">
+        <HBox alignment="CENTER" >
             <Button text="Enviar" onAction="#onEnviarFormulario" />
         </HBox>
     </bottom>

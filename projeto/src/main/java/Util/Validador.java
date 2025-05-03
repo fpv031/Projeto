@@ -1,5 +1,4 @@
-javafx.fxml.FXML;
-package util;
+package Util;
 
 public class Validador {
 
