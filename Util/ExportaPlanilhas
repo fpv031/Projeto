@@ -1,0 +1,48 @@
+package util;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileOutputStream;
+import java.sql.*;
+
+public class ExportarPlanilha {
+
+    public static void gerarPlanilhaRespostas(Connection conn) {
+        String sql = "SELECT * FROM resposta";
+
+        try (
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            Workbook workbook = new XSSFWorkbook()
+        ) {
+            Sheet planilha = workbook.createSheet("Respostas");
+
+            // Cabeçalho
+            ResultSetMetaData meta = rs.getMetaData();
+            int colCount = meta.getColumnCount();
+            Row header = planilha.createRow(0);
+            for (int i = 1; i <= colCount; i++) {
+                header.createCell(i - 1).setCellValue(meta.getColumnName(i));
+            }
+
+            // Dados
+            int rowIndex = 1;
+            while (rs.next()) {
+                Row row = planilha.createRow(rowIndex++);
+                for (int i = 1; i <= colCount; i++) {
+                    row.createCell(i - 1).setCellValue(rs.getString(i));
+                }
+            }
+
+            // Salvar planilha
+            try (FileOutputStream out = new FileOutputStream("respostas.xlsx")) {
+                workbook.write(out);
+                System.out.println("Planilha 'respostas.xlsx' gerada com sucesso!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

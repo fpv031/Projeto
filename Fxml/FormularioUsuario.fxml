@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="controller.FormularioUsuarioController">
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox fx:id="vboxPerguntas" spacing="15" padding="15" />
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER" padding="10">
+            <Button text="Enviar" onAction="#onEnviarFormulario" />
+        </HBox>
+    </bottom>
+</BorderPane>

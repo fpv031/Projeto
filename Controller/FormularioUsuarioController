@@ -1,0 +1,90 @@
+package controller;
+
+import dao.PerguntaDAO;
+import dao.RespostaDAO;
+import model.Pergunta;
+import model.Resposta;
+import model.Usuario;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.*;
+
+public class FormularioUsuarioController {
+
+    @FXML
+    private VBox vboxPerguntas;
+
+    private Usuario usuario;
+    private Connection conn;
+    private Map<Integer, Control> campoRespostas = new HashMap<>();
+    private List<Pergunta> perguntas;
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+        carregarFormulario();
+    }
+
+    private void carregarFormulario() {
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/formulario_fiemg", "root", "sua_senha");
+            PerguntaDAO dao = new PerguntaDAO(conn);
+            perguntas = dao.listarPerguntas();
+
+            for (Pergunta p : perguntas) {
+                if (p.getPerguntaCondicionalId() != null) continue; // será tratada depois
+
+                adicionarPergunta(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void adicionarPergunta(Pergunta p) {
+        Label lbl = new Label(p.getTexto());
+        vboxPerguntas.getChildren().add(lbl);
+
+        if ("fechada".equalsIgnoreCase(p.getTipo())) {
+            ChoiceBox<String> cb = new ChoiceBox<>();
+            cb.getItems().addAll("Sim", "Não");
+            cb.setOnAction(e -> verificarCondicionais(p, cb.getValue()));
+            campoRespostas.put(p.getId(), cb);
+            vboxPerguntas.getChildren().add(cb);
+        } else {
+            TextField tf = new TextField();
+            campoRespostas.put(p.getId(), tf);
+            vboxPerguntas.getChildren().add(tf);
+        }
+    }
+
+    private void verificarCondicionais(Pergunta perguntaBase, String resposta) {
+        perguntas.stream()
+            .filter(p -> perguntaBase.getId() == p.getPerguntaCondicionalId() &&
+                         resposta.equalsIgnoreCase(p.getValorCondicional()))
+            .forEach(this::adicionarPergunta);
+    }
+
+    @FXML
+    void onEnviarFormulario() {
+        RespostaDAO dao = new RespostaDAO(conn);
+        for (Map.Entry<Integer, Control> entry : campoRespostas.entrySet()) {
+            String valor = "";
+
+            if (entry.getValue() instanceof TextField tf) {
+                valor = tf.getText();
+            } else if (entry.getValue() instanceof ChoiceBox cb) {
+                valor = (String) cb.getValue();
+            }
+
+            dao.salvarResposta(new Resposta(0, usuario.getId(), entry.getKey(), valor));
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Respostas salvas!");
+        alert.showAndWait();
+    }
+}

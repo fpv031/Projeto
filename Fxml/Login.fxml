@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.LoginController"
+            stylesheets="view/login.css"  <!-- Corrigido o caminho do arquivo CSS -->
+            prefWidth="400" prefHeight="300">
+    
+    <VBox alignment="CENTER" spacing="15" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20"
+          AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50">
+
+        <Label text="Login FIEMG" styleClass="title-label" />
+
+        <TextField fx:id="txtEmail" promptText="E-mail institucional" styleClass="input-field" />
+        <PasswordField fx:id="txtSenha" promptText="Senha" styleClass="input-field" />
+
+        <Button fx:id="btnLogin" text="Entrar" onAction="#onLogin" styleClass="login-button" />
+
+        <Label fx:id="lblErro" textFill="red" styleClass="error-label" />
+    </VBox>
+</AnchorPane>

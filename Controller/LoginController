@@ -1,0 +1,113 @@
+package controller;
+
+import dao.UsuarioDAO;
+import model.Usuario;
+import util.Validador;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class LoginController {
+
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private PasswordField txtSenha;
+
+    @FXML
+    private Button btnLogin;
+
+    @FXML
+    private Label lblErro;
+
+    private Connection conn;
+
+    @FXML
+    public void initialize() {
+        try {
+            conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/formulario_fiemg", "root", "sua_senha");
+        } catch (SQLException e) {
+            lblErro.setText("Erro ao conectar ao banco de dados.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void onLogin(ActionEvent event) {
+        String email = txtEmail.getText().trim();
+        String senha = txtSenha.getText();
+
+        if (email.isEmpty() || senha.isEmpty()) {
+            lblErro.setText("Preencha todos os campos.");
+            return;
+        }
+
+        if (Validador.isAdminLogin(email, senha)) {
+            carregarTela("/view/Admin.fxml");
+            return;
+        }
+
+        if (!Validador.validarEmailInstitucional(email)) {
+            lblErro.setText("Utilize um e-mail institucional (@fiemg.com.br).");
+            return;
+        }
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
+        if (!usuarioDAO.emailExiste(email)) {
+            usuarioDAO.registrarNovoUsuario(email); // Primeira vez
+        }
+
+        Usuario usuario = usuarioDAO.autenticar(email, senha);
+
+        if (usuario == null) {
+            lblErro.setText("Credenciais inválidas.");
+            return;
+        }
+
+        if (usuario.isPrimeiraVez()) {
+            carregarTelaComEmail("/view/TrocarSenha.fxml", usuario);
+        } else {
+            carregarTelaComEmail("/view/FormularioUsuario.fxml", usuario);
+        }
+    }
+
+    private void carregarTela(String caminhoFXML) {
+        try {
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource(caminhoFXML));
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            lblErro.setText("Erro ao carregar a próxima tela.");
+            e.printStackTrace();
+        }
+    }
+
+    private void carregarTelaComEmail(String caminhoFXML, Usuario usuario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof FormularioUsuarioController) {
+                ((FormularioUsuarioController) controller).setUsuario(usuario);
+            } else if (controller instanceof TrocarSenhaController) {
+                ((TrocarSenhaController) controller).setUsuario(usuario);
+            }
+
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            lblErro.setText("Erro ao carregar tela.");
+            e.printStackTrace();
+        }
+    }
+}
