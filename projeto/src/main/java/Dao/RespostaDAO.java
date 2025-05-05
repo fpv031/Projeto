@@ -1,5 +1,5 @@
-package dao;
-import model.Resposta;
+package Dao;
+import Models.Resposta;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

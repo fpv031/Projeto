@@ -1,6 +1,4 @@
-javafx
-java
-package model;
+package Models;
 
 public class Resposta {
     private int id;
@@ -9,7 +7,7 @@ public class Resposta {
     private String resposta;
 
     // Construtores, getters e setters
-}
+
 public Resposta() {}
 
 public Resposta(int id, int usuarioId, int perguntaId, String resposta) {
@@ -51,4 +49,5 @@ public String getResposta() {
 
 public void setResposta(String resposta) {
     this.resposta = resposta;
+}
 }

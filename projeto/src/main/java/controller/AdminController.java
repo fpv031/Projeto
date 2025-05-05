@@ -1,11 +1,10 @@
 package controller;
 
-import dao.PerguntaDAO;
-import model.Pergunta;
+import Dao.PerguntaDAO;
+import Models.Perguntas;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -59,7 +58,7 @@ public class AdminController {
 
         String valorCond = txtValorCondicional.getText().isEmpty() ? null : txtValorCondicional.getText();
 
-        Pergunta pergunta = new Pergunta(0, texto, tipo, idCondicional, valorCond);
+        Perguntas pergunta = new Perguntas(0, texto, tipo, idCondicional, valorCond);
 
         PerguntaDAO dao = new PerguntaDAO(conn);
         dao.salvarPergunta(pergunta);

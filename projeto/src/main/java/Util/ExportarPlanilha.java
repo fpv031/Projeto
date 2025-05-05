@@ -1,10 +1,12 @@
-package util;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+package Util;
 
 import java.io.FileOutputStream;
 import java.sql.*;
+
+import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExportarPlanilha {
 
@@ -16,12 +18,12 @@ public class ExportarPlanilha {
             ResultSet rs = stmt.executeQuery(sql);
             Workbook workbook = new XSSFWorkbook()
         ) {
-            Sheet planilha = workbook.createSheet("Respostas");
+            Sheet planilha = (Sheet) workbook.createSheet("Respostas");
 
             // Cabeçalho
             ResultSetMetaData meta = rs.getMetaData();
             int colCount = meta.getColumnCount();
-            Row header = planilha.createRow(0);
+            Row header = ((org.apache.poi.ss.usermodel.Sheet) planilha).createRow(0);
             for (int i = 1; i <= colCount; i++) {
                 header.createCell(i - 1).setCellValue(meta.getColumnName(i));
             }
@@ -29,7 +31,7 @@ public class ExportarPlanilha {
             // Dados
             int rowIndex = 1;
             while (rs.next()) {
-                Row row = planilha.createRow(rowIndex++);
+                Row row = ((org.apache.poi.ss.usermodel.Sheet) planilha).createRow(rowIndex++);
                 for (int i = 1; i <= colCount; i++) {
                     row.createCell(i - 1).setCellValue(rs.getString(i));
                 }

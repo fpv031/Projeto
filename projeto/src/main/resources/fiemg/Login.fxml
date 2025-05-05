@@ -5,7 +5,6 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.LoginController"
-            stylesheets="view/login.css"  <!-- Corrigido o caminho do arquivo CSS -->
             prefWidth="400" prefHeight="300">
     
     <VBox alignment="CENTER" spacing="15" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20"

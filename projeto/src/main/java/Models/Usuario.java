@@ -1,6 +1,4 @@
-javafx
-java
-package model;
+package Models;
 
 public class Usuario {
     private int id;
@@ -10,7 +8,7 @@ public class Usuario {
     private boolean isAdmin;
 
     // Construtores, getters e setters
-}
+
 public Usuario() {}
 
 public Usuario(int id, String email, String senha, boolean primeiraVez, boolean isAdmin) {
@@ -61,4 +59,5 @@ public boolean isAdmin() {
 
 public void setAdmin(boolean isAdmin) {
     this.isAdmin = isAdmin;
+}
 }

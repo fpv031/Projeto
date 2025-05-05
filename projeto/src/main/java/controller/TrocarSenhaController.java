@@ -1,7 +1,7 @@
 package controller;
 
-import dao.UsuarioDAO;
-import model.Usuario;
+import Dao.UsuarioDAO;
+import Models.Usuario;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

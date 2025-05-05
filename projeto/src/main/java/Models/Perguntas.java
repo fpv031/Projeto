@@ -1,6 +1,4 @@
-javafx
-java
-package model;
+package Models;
 
 public class Perguntas {
     private int id;
@@ -10,10 +8,10 @@ public class Perguntas {
     private String valorCondicional;       // "sim", "não", etc.
 
     // Construtores, getters e setters
-}
+
 public Perguntas() {}
 
-public Pergunta(int id, String texto, String tipo, Integer perguntaCondicionalId, String valorCondicional) {
+public Perguntas(int id, String texto, String tipo, Integer perguntaCondicionalId, String valorCondicional) {
     this.id = id;
     this.texto = texto;
     this.tipo = tipo;
@@ -61,4 +59,5 @@ public String getValorCondicional() {
 
 public void setValorCondicional(String valorCondicional) {
     this.valorCondicional = valorCondicional;
+}
 }

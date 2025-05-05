@@ -1,10 +1,8 @@
 package controller;
 
-import dao.PerguntaDAO;
-import dao.RespostaDAO;
-import model.Pergunta;
-import model.Resposta;
-import model.Usuario;
+import Dao.PerguntaDAO;
+import Dao.RespostaDAO;
+import Models.*;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -22,7 +20,7 @@ public class FormularioUsuarioController {
     private Usuario usuario;
     private Connection conn;
     private Map<Integer, Control> campoRespostas = new HashMap<>();
-    private List<Pergunta> perguntas;
+    private List<Perguntas> perguntas;
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
@@ -35,7 +33,7 @@ public class FormularioUsuarioController {
             PerguntaDAO dao = new PerguntaDAO(conn);
             perguntas = dao.listarPerguntas();
 
-            for (Pergunta p : perguntas) {
+            for (Perguntas p : perguntas) {
                 if (p.getPerguntaCondicionalId() != null) continue; // será tratada depois
 
                 adicionarPergunta(p);
@@ -45,7 +43,7 @@ public class FormularioUsuarioController {
         }
     }
 
-    private void adicionarPergunta(Pergunta p) {
+    private void adicionarPergunta(Perguntas p) {
         Label lbl = new Label(p.getTexto());
         vboxPerguntas.getChildren().add(lbl);
 
@@ -62,7 +60,7 @@ public class FormularioUsuarioController {
         }
     }
 
-    private void verificarCondicionais(Pergunta perguntaBase, String resposta) {
+    private void verificarCondicionais(Perguntas perguntaBase, String resposta) {
         perguntas.stream()
             .filter(p -> perguntaBase.getId() == p.getPerguntaCondicionalId() &&
                          resposta.equalsIgnoreCase(p.getValorCondicional()))
@@ -75,10 +73,12 @@ public class FormularioUsuarioController {
         for (Map.Entry<Integer, Control> entry : campoRespostas.entrySet()) {
             String valor = "";
 
-            if (entry.getValue() instanceof TextField tf) {
+            if (entry.getValue() instanceof TextField) {
+                TextField tf = (TextField) entry.getValue();
                 valor = tf.getText();
-            } else if (entry.getValue() instanceof ChoiceBox cb) {
-                valor = (String) cb.getValue();
+            } else if (entry.getValue() instanceof ChoiceBox) {
+                ChoiceBox<String> cb = (ChoiceBox<String>) entry.getValue();
+                valor = cb.getValue();
             }
 
             dao.salvarResposta(new Resposta(0, usuario.getId(), entry.getKey(), valor));
